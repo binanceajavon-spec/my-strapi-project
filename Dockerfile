@@ -1,12 +1,14 @@
-FROM node:20-slim
+FROM node:18-slim
 
 WORKDIR /opt/app
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --omit=dev
+RUN npm install
 
 COPY . .
+
+RUN npm run build
 
 ENV NODE_ENV production
 ENV PORT 10000
