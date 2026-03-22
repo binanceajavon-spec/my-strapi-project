@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
 ENV NODE_ENV production
 ENV PORT 10000
 ENV HOST 0.0.0.0
