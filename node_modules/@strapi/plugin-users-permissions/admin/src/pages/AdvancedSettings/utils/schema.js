@@ -1,4 +1,4 @@
-import { translatedErrors } from '@strapi/strapi/admin';
+import { translatedErrors } from '@strapi/helper-plugin';
 import * as yup from 'yup';
 
 // eslint-disable-next-line prefer-regex-literals
@@ -12,10 +12,7 @@ const schema = yup.object().shape({
   }),
   email_reset_password: yup
     .string(translatedErrors.string)
-    .matches(URL_REGEX, {
-      id: translatedErrors.regex.id,
-      defaultMessage: 'This is not a valid URL',
-    })
+    .matches(URL_REGEX, translatedErrors.regex)
     .nullable(),
 });
 

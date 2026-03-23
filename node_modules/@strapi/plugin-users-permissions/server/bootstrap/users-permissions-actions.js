@@ -16,12 +16,6 @@ module.exports = {
       uid: 'roles.read',
       subCategory: 'roles',
       pluginName: 'users-permissions',
-      aliases: [
-        {
-          actionId: 'plugin::content-manager.explorer.read',
-          subjects: ['plugin::users-permissions.role'],
-        },
-      ],
     },
     {
       section: 'plugins',

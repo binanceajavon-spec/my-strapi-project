@@ -1,4 +1,4 @@
-import { translatedErrors } from '@strapi/strapi/admin';
+import { translatedErrors } from '@strapi/helper-plugin';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
@@ -8,27 +8,15 @@ const schema = yup.object().shape({
       from: yup
         .object()
         .shape({
-          name: yup.string().required({
-            id: translatedErrors.required.id,
-            defaultMessage: 'This field is required',
-          }),
-          email: yup.string().email(translatedErrors.email).required({
-            id: translatedErrors.required.id,
-            defaultMessage: 'This field is required',
-          }),
+          name: yup.string().required(translatedErrors.required),
+          email: yup.string().email(translatedErrors.email).required(translatedErrors.required),
         })
         .required(),
       response_email: yup.string().email(translatedErrors.email),
-      object: yup.string().required({
-        id: translatedErrors.required.id,
-        defaultMessage: 'This field is required',
-      }),
-      message: yup.string().required({
-        id: translatedErrors.required.id,
-        defaultMessage: 'This field is required',
-      }),
+      object: yup.string().required(translatedErrors.required),
+      message: yup.string().required(translatedErrors.required),
     })
-    .required(translatedErrors.required.id),
+    .required(translatedErrors.required),
 });
 
 export default schema;

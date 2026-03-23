@@ -1,18 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
-const { async, errors } = require('@strapi/utils');
+const { ApplicationError, ValidationError } = require('@strapi/utils').errors;
 const { getService } = require('../utils');
 const { validateDeleteRoleBody } = require('./validation/user');
-
-const { ApplicationError, ValidationError } = errors;
-
-const sanitizeOutput = async (role) => {
-  const { sanitizeLocalizationFields } = strapi.plugin('i18n').service('sanitize');
-  const schema = strapi.getModel('plugin::users-permissions.role');
-
-  return async.pipe(sanitizeLocalizationFields(schema))(role);
-};
 
 module.exports = {
   /**
@@ -39,17 +30,13 @@ module.exports = {
       return ctx.notFound();
     }
 
-    const safeRole = await sanitizeOutput(role);
-
-    ctx.send({ role: safeRole });
+    ctx.send({ role });
   },
 
   async find(ctx) {
     const roles = await getService('role').find();
 
-    const safeRoles = await Promise.all(roles.map(sanitizeOutput));
-
-    ctx.send({ roles: safeRoles });
+    ctx.send({ roles });
   },
 
   async updateRole(ctx) {
@@ -72,7 +59,7 @@ module.exports = {
     }
 
     // Fetch public role.
-    const publicRole = await strapi.db
+    const publicRole = await strapi
       .query('plugin::users-permissions.role')
       .findOne({ where: { type: 'public' } });
 

@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 
 import {
+  Icon,
   IconButton,
   Table,
   Tbody,
@@ -10,9 +11,9 @@ import {
   Tr,
   Typography,
   VisuallyHidden,
-  Box,
 } from '@strapi/design-system';
-import { Check, Pencil, ArrowClockwise as Refresh } from '@strapi/icons';
+import { onRowClick, stopPropagation } from '@strapi/helper-plugin';
+import { Check, Pencil, Refresh } from '@strapi/icons';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -52,16 +53,16 @@ const EmailTable = ({ canUpdate, onEditClick }) => {
         </Tr>
       </Thead>
       <Tbody>
-        <Tr cursor="pointer" onClick={() => onEditClick('reset_password')}>
+        <Tr {...onRowClick({ fn: () => onEditClick('reset_password') })}>
           <Td>
-            <Box width="3.2rem" height="3.2rem" padding="0.8rem">
+            <Icon>
               <Refresh
                 aria-label={formatMessage({
                   id: 'global.reset-password',
                   defaultMessage: 'Reset password',
                 })}
               />
-            </Box>
+            </Icon>
           </Td>
           <Td>
             <Typography>
@@ -71,30 +72,28 @@ const EmailTable = ({ canUpdate, onEditClick }) => {
               })}
             </Typography>
           </Td>
-          <Td onClick={(e) => e.stopPropagation()}>
+          <Td {...stopPropagation}>
             <IconButton
               onClick={() => onEditClick('reset_password')}
               label={formatMessage({
                 id: getTrad('Email.template.form.edit.label'),
                 defaultMessage: 'Edit a template',
               })}
-              variant="ghost"
-              disabled={!canUpdate}
-            >
-              <Pencil />
-            </IconButton>
+              noBorder
+              icon={canUpdate && <Pencil />}
+            />
           </Td>
         </Tr>
-        <Tr cursor="pointer" onClick={() => onEditClick('email_confirmation')}>
+        <Tr {...onRowClick({ fn: () => onEditClick('email_confirmation') })}>
           <Td>
-            <Box width="3.2rem" height="3.2rem" padding="0.8rem">
+            <Icon>
               <Check
                 aria-label={formatMessage({
                   id: getTrad('Email.template.email_confirmation'),
                   defaultMessage: 'Email address confirmation',
                 })}
               />
-            </Box>
+            </Icon>
           </Td>
           <Td>
             <Typography>
@@ -104,18 +103,16 @@ const EmailTable = ({ canUpdate, onEditClick }) => {
               })}
             </Typography>
           </Td>
-          <Td onClick={(e) => e.stopPropagation()}>
+          <Td {...stopPropagation}>
             <IconButton
               onClick={() => onEditClick('email_confirmation')}
               label={formatMessage({
                 id: getTrad('Email.template.form.edit.label'),
                 defaultMessage: 'Edit a template',
               })}
-              variant="ghost"
-              disabled={!canUpdate}
-            >
-              <Pencil />
-            </IconButton>
+              noBorder
+              icon={canUpdate && <Pencil />}
+            />
           </Td>
         </Tr>
       </Tbody>

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 
-import { Flex, Grid, Typography } from '@strapi/design-system';
+import { Flex, GridItem, Typography } from '@strapi/design-system';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import without from 'lodash/without';
@@ -22,7 +22,7 @@ const Policies = () => {
     : controllerRoutes.filter((o) => o.handler.endsWith(pathResolved));
 
   return (
-    <Grid.Item
+    <GridItem
       col={5}
       background="neutral150"
       paddingTop={6}
@@ -30,8 +30,6 @@ const Policies = () => {
       paddingLeft={7}
       paddingRight={7}
       style={{ minHeight: '100%' }}
-      direction="column"
-      alignItems="stretch"
     >
       {selectedAction ? (
         <Flex direction="column" alignItems="stretch" gap={2}>
@@ -42,13 +40,13 @@ const Policies = () => {
         </Flex>
       ) : (
         <Flex direction="column" alignItems="stretch" gap={2}>
-          <Typography variant="delta" tag="h3">
+          <Typography variant="delta" as="h3">
             {formatMessage({
               id: 'users-permissions.Policies.header.title',
               defaultMessage: 'Advanced settings',
             })}
           </Typography>
-          <Typography tag="p" textColor="neutral600">
+          <Typography as="p" textColor="neutral600">
             {formatMessage({
               id: 'users-permissions.Policies.header.hint',
               defaultMessage:
@@ -57,7 +55,7 @@ const Policies = () => {
           </Typography>
         </Flex>
       )}
-    </Grid.Item>
+    </GridItem>
   );
 };
 

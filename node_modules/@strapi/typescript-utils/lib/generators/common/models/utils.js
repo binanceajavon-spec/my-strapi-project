@@ -18,8 +18,8 @@ const {
 } = require('lodash/fp');
 
 const NAMESPACES = {
-  Struct: 'Struct',
-  Schema: 'Schema',
+  schema: 'Schema',
+  attribute: 'Attribute',
 };
 
 /**
@@ -50,7 +50,7 @@ const getSchemaModelType = (schema) => {
  * Get the parent type name to extend based on the schema's nature
  *
  * @param {object} schema
- * @returns {string|null}
+ * @returns {string}
  */
 const getSchemaExtendsTypeName = (schema) => {
   const base = getSchemaModelType(schema);
@@ -59,7 +59,7 @@ const getSchemaExtendsTypeName = (schema) => {
     return null;
   }
 
-  return `${NAMESPACES.Struct}.${upperFirst(base)}Schema`;
+  return `${NAMESPACES.schema}.${upperFirst(base)}`;
 };
 
 /**
@@ -111,7 +111,7 @@ const toTypeLiteral = (data) => {
     throw new Error(`Cannot convert to object literal. Unknown type "${typeof data}"`);
   }
 
-  const entries = Object.entries(data).sort((a, b) => a[0].localeCompare(b[0]));
+  const entries = Object.entries(data);
 
   const props = entries.reduce((acc, [key, value]) => {
     // Handle keys such as content-type-builder & co.
@@ -145,12 +145,12 @@ const getDefinitionAttributesCount = (definition) => {
 };
 
 /**
- * Add the Schema.Attribute namespace before the typename
+ * Add the attribute namespace before the typename
  *
  * @param {string} typeName
  * @returns {string}
  */
-const withAttributeNamespace = (typeName) => `${NAMESPACES.Schema}.Attribute.${typeName}`;
+const withAttributeNamespace = (typeName) => `${NAMESPACES.attribute}.${typeName}`;
 
 /**
  * Add the schema namespace before the typename

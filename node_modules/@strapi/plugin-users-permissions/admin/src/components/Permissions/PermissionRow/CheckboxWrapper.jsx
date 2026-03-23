@@ -1,10 +1,9 @@
 import { Box } from '@strapi/design-system';
-import { styled, css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const activeCheckboxWrapperStyles = css`
   background: ${(props) => props.theme.colors.primary100};
-
-  #cog {
+  svg {
     opacity: 1;
   }
 `;
@@ -14,7 +13,7 @@ const CheckboxWrapper = styled(Box)`
   justify-content: space-between;
   align-items: center;
 
-  #cog {
+  svg {
     opacity: 0;
     path {
       fill: ${(props) => props.theme.colors.primary600};

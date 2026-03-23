@@ -1,11 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
 
-import { Box, Checkbox, Flex, Typography, Grid, VisuallyHidden } from '@strapi/design-system';
-import { Cog } from '@strapi/icons';
+import {
+  Box,
+  Checkbox,
+  Flex,
+  Typography,
+  Grid,
+  GridItem,
+  VisuallyHidden,
+} from '@strapi/design-system';
+import { Cog as CogIcon } from '@strapi/icons';
 import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 import { useUsersPermissions } from '../../../contexts/UsersPermissionsContext';
 
@@ -63,27 +71,28 @@ const SubCategory = ({ subCategory }) => {
         <Box paddingLeft={4}>
           <Checkbox
             name={subCategory.name}
-            checked={hasSomeActionsSelected ? 'indeterminate' : hasAllActionsSelected}
-            onCheckedChange={(value) =>
+            value={hasAllActionsSelected}
+            onValueChange={(value) =>
               handleChangeSelectAll({ target: { name: subCategory.name, value } })
             }
+            indeterminate={hasSomeActionsSelected}
           >
             {formatMessage({ id: 'app.utils.select-all', defaultMessage: 'Select all' })}
           </Checkbox>
         </Box>
       </Flex>
       <Flex paddingTop={6} paddingBottom={6}>
-        <Grid.Root gap={2} style={{ flex: 1 }}>
+        <Grid gap={2} style={{ flex: 1 }}>
           {subCategory.actions.map((action) => {
             const name = `${action.name}.enabled`;
 
             return (
-              <Grid.Item col={6} key={action.name} direction="column" alignItems="stretch">
+              <GridItem col={6} key={action.name}>
                 <CheckboxWrapper isActive={isActionSelected(action.name)} padding={2} hasRadius>
                   <Checkbox
-                    checked={get(modifiedData, name, false)}
+                    value={get(modifiedData, name, false)}
                     name={name}
-                    onCheckedChange={(value) => onChange({ target: { name, value } })}
+                    onValueChange={(value) => onChange({ target: { name, value } })}
                   >
                     {action.label}
                   </Checkbox>
@@ -92,7 +101,7 @@ const SubCategory = ({ subCategory }) => {
                     onClick={() => onSelectedAction(action.name)}
                     style={{ display: 'inline-flex', alignItems: 'center' }}
                   >
-                    <VisuallyHidden tag="span">
+                    <VisuallyHidden as="span">
                       {formatMessage(
                         {
                           id: 'app.utils.show-bound-route',
@@ -103,13 +112,13 @@ const SubCategory = ({ subCategory }) => {
                         }
                       )}
                     </VisuallyHidden>
-                    <Cog id="cog" cursor="pointer" />
+                    <CogIcon />
                   </button>
                 </CheckboxWrapper>
-              </Grid.Item>
+              </GridItem>
             );
           })}
-        </Grid.Root>
+        </Grid>
       </Flex>
     </Box>
   );

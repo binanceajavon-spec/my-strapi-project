@@ -1,28 +1,33 @@
 import * as React from 'react';
 
 import {
+  ContentLayout,
+  HeaderLayout,
   Main,
   Button,
   Flex,
   TextInput,
   Textarea,
   Typography,
+  GridItem,
   Grid,
-  Field,
 } from '@strapi/design-system';
-import { Check } from '@strapi/icons';
 import {
-  Page,
-  BackButton,
+  CheckPagePermissions,
+  useOverlayBlocker,
+  SettingsPageTitle,
+  LoadingIndicatorPage,
+  Form,
   useAPIErrorHandler,
-  useNotification,
   useFetchClient,
-  Layouts,
-} from '@strapi/strapi/admin';
-import { Formik, Form } from 'formik';
+  useNotification,
+  Link,
+} from '@strapi/helper-plugin';
+import { ArrowLeft, Check } from '@strapi/icons';
+import { Formik } from 'formik';
 import { useIntl } from 'react-intl';
 import { useQuery, useMutation } from 'react-query';
-import { useMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 
 import UsersPermissions from '../../../components/UsersPermissions';
 import { PERMISSIONS } from '../../../constants';
@@ -32,10 +37,11 @@ import { usePlugins } from '../hooks/usePlugins';
 
 export const EditPage = () => {
   const { formatMessage } = useIntl();
-  const { toggleNotification } = useNotification();
+  const toggleNotification = useNotification();
+  const { lockApp, unlockApp } = useOverlayBlocker();
   const {
     params: { id },
-  } = useMatch(`/settings/users-permissions/roles/:id`);
+  } = useRouteMatch(`/settings/users-permissions/roles/:id`);
   const { get } = useFetchClient();
   const { isLoading: isLoadingPlugins, routes } = usePlugins();
   const {
@@ -57,7 +63,7 @@ export const EditPage = () => {
   const mutation = useMutation((body) => put(`/users-permissions/roles/${id}`, body), {
     onError(error) {
       toggleNotification({
-        type: 'danger',
+        type: 'warning',
         message: formatAPIError(error),
       });
     },
@@ -65,10 +71,10 @@ export const EditPage = () => {
     async onSuccess() {
       toggleNotification({
         type: 'success',
-        message: formatMessage({
+        message: {
           id: getTrad('Settings.roles.created'),
           defaultMessage: 'Role edited',
-        }),
+        },
       });
 
       await refetchRole();
@@ -76,23 +82,24 @@ export const EditPage = () => {
   });
 
   const handleEditRoleSubmit = async (data) => {
+    // Set loading state
+    lockApp();
+
     const permissions = permissionsRef.current.getPermissions();
 
     await mutation.mutate({ ...data, ...permissions, users: [] });
+
+    unlockApp();
   };
 
   if (isLoadingRole) {
-    return <Page.Loading />;
+    return <LoadingIndicatorPage />;
   }
 
   return (
     <Main>
-      <Page.Title>
-        {formatMessage(
-          { id: 'Settings.PageTitle', defaultMessage: 'Settings - {name}' },
-          { name: 'Roles' }
-        )}
-      </Page.Title>
+      {/* TODO: this needs to be translated */}
+      <SettingsPageTitle name="Roles" />
       <Formik
         enableReinitialize
         initialValues={{ name: role.name, description: role.description }}
@@ -101,9 +108,9 @@ export const EditPage = () => {
       >
         {({ handleSubmit, values, handleChange, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <Layouts.Header
+            <HeaderLayout
               primaryAction={
-                !isLoadingPlugins ? (
+                !isLoadingPlugins && (
                   <Button
                     disabled={role.code === 'strapi-super-admin'}
                     type="submit"
@@ -115,13 +122,20 @@ export const EditPage = () => {
                       defaultMessage: 'Save',
                     })}
                   </Button>
-                ) : null
+                )
               }
               title={role.name}
               subtitle={role.description}
-              navigationAction={<BackButton fallback=".." />}
+              navigationAction={
+                <Link startIcon={<ArrowLeft />} to="/settings/users-permissions/roles">
+                  {formatMessage({
+                    id: 'global.back',
+                    defaultMessage: 'Back',
+                  })}
+                </Link>
+              }
             />
-            <Layouts.Content>
+            <ContentLayout>
               <Flex
                 background="neutral0"
                 direction="column"
@@ -135,40 +149,40 @@ export const EditPage = () => {
                 shadow="filterShadow"
               >
                 <Flex direction="column" alignItems="stretch" gap={4}>
-                  <Typography variant="delta" tag="h2">
+                  <Typography variant="delta" as="h2">
                     {formatMessage({
                       id: getTrad('EditPage.form.roles'),
                       defaultMessage: 'Role details',
                     })}
                   </Typography>
 
-                  <Grid.Root gap={4}>
-                    <Grid.Item col={6} direction="column" alignItems="stretch">
-                      <Field.Root
+                  <Grid gap={4}>
+                    <GridItem col={6}>
+                      <TextInput
                         name="name"
+                        value={values.name || ''}
+                        onChange={handleChange}
+                        label={formatMessage({
+                          id: 'global.name',
+                          defaultMessage: 'Name',
+                        })}
                         error={
                           errors?.name
-                            ? formatMessage({
-                                id: errors.name,
-                                defaultMessage: 'Name is required',
-                              })
+                            ? formatMessage({ id: errors.name, defaultMessage: 'Name is required' })
                             : false
                         }
                         required
-                      >
-                        <Field.Label>
-                          {formatMessage({
-                            id: 'global.name',
-                            defaultMessage: 'Name',
-                          })}
-                        </Field.Label>
-                        <TextInput value={values.name || ''} onChange={handleChange} />
-                        <Field.Error />
-                      </Field.Root>
-                    </Grid.Item>
-                    <Grid.Item col={6} direction="column" alignItems="stretch">
-                      <Field.Root
-                        name="description"
+                      />
+                    </GridItem>
+                    <GridItem col={6}>
+                      <Textarea
+                        id="description"
+                        value={values.description || ''}
+                        onChange={handleChange}
+                        label={formatMessage({
+                          id: 'global.description',
+                          defaultMessage: 'Description',
+                        })}
                         error={
                           errors?.description
                             ? formatMessage({
@@ -178,18 +192,9 @@ export const EditPage = () => {
                             : false
                         }
                         required
-                      >
-                        <Field.Label>
-                          {formatMessage({
-                            id: 'global.description',
-                            defaultMessage: 'Description',
-                          })}
-                        </Field.Label>
-                        <Textarea value={values.description || ''} onChange={handleChange} />
-                        <Field.Error />
-                      </Field.Root>
-                    </Grid.Item>
-                  </Grid.Root>
+                      />
+                    </GridItem>
+                  </Grid>
                 </Flex>
 
                 {!isLoadingPlugins && (
@@ -200,7 +205,7 @@ export const EditPage = () => {
                   />
                 )}
               </Flex>
-            </Layouts.Content>
+            </ContentLayout>
           </Form>
         )}
       </Formik>
@@ -209,7 +214,7 @@ export const EditPage = () => {
 };
 
 export const ProtectedRolesEditPage = () => (
-  <Page.Protect permissions={PERMISSIONS.updateRole}>
+  <CheckPagePermissions permissions={PERMISSIONS.updateRole}>
     <EditPage />
-  </Page.Protect>
+  </CheckPagePermissions>
 );

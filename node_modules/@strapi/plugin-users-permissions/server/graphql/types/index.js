@@ -10,7 +10,6 @@ const typesFactories = [
   require('./create-role-payload'),
   require('./update-role-payload'),
   require('./delete-role-payload'),
-  require('./user-input'),
 ];
 
 /**

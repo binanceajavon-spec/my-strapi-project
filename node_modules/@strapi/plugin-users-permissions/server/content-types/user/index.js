@@ -12,6 +12,7 @@ module.exports = {
     displayName: 'User',
   },
   options: {
+    draftAndPublish: false,
     timestamps: true,
   },
   attributes: {
