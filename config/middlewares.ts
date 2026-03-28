@@ -1,5 +1,4 @@
 export default [
-  'strapi::logger',
   'strapi::errors',
   {
     name: 'strapi::security',
@@ -8,8 +7,8 @@ export default [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https://market-assets.strapi.io', 'https://my-strapi-project-production-d4d2.up.railway.app'],
-          'media-src': ["'self'", 'data:', 'blob:', 'https://my-strapi-project-production-d4d2.up.railway.app'],
+          'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
+          'media-src': ["'self'", 'data:', 'blob:'],
           upgradeInsecureRequests: null,
         },
       },
@@ -36,5 +35,3 @@ export default [
   'strapi::favicon',
   'strapi::public',
 ];
-
-
