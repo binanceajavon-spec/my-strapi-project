@@ -2,18 +2,15 @@ export default ({ env }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
 
+  // URL publique de votre Strapi
+  url: env('STRAPI_URL', 'https://my-strapi-project-production-d4d2.up.railway.app'),
+
   app: {
     keys: env.array('APP_KEYS'),
   },
 
-  proxy: true, // 🔥 FIX CRITIQUE
+  proxy: true, // Important pour Railway
 
-  settings: {
-    cors: {
-      enabled: true,
-      origin: ['https://binanceajavon-spec.github.io'],
-      headers: ['*'],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-    },
-  },
+  // Supprimez la section "settings.cors" ici car elle est gérée par middlewares.ts
+  // pour éviter les conflits
 });

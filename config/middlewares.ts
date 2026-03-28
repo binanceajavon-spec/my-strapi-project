@@ -15,10 +15,18 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['*'], 
+      enabled: true,
+      origin: [
+        'https://binanceajavon-spec.github.io',
+        'https://binanceajavon-spec.github.io/loji-premiere',
+        'https://*.github.io',
+        'http://localhost:3000',
+        'http://localhost:1337',
+      ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-      keepHeaderOnError: true,
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
+      credentials: true, // Important pour les cookies d'authentification
+      keepHeadersOnError: true,
     },
   },
   'strapi::poweredBy',
@@ -28,4 +36,3 @@ export default [
   'strapi::favicon',
   'strapi::public',
 ];
-// Force update Loji v2
