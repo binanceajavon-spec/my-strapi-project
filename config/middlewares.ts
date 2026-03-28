@@ -28,3 +28,4 @@ export default [
   'strapi::favicon',
   'strapi::public',
 ];
+// Force update Loji v2
