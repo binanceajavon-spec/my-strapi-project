@@ -1,19 +1,15 @@
 import path from 'path';
 
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'postgres'); // On force postgres par défaut ici
+  const client = env('DATABASE_CLIENT', 'postgres');
 
   return {
     connection: {
       client,
       connection: {
-        host: env('DATABASE_HOST', 'localhost'),
-        port: env.int('DATABASE_PORT', 5432),
-        database: env('DATABASE_NAME', 'strapi'),
-        user: env('DATABASE_USERNAME', 'strapi'),
-        password: env('DATABASE_PASSWORD', 'strapi'),
-        ssl: env.bool('DATABASE_SSL', true) && { // Force le SSL sur true par défaut pour Railway
-          rejectUnauthorized: false, // CRUCIAL : Railway rejette sinon la connexion
+        connectionString: env('DATABASE_URL'), // Utilise l'URL complète fournie par Railway
+        ssl: env.bool('DATABASE_SSL', true) && {
+          rejectUnauthorized: false, // Garde cette ligne, elle est vitale sur Railway
         },
       },
       pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
