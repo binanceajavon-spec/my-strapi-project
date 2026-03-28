@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   'strapi::errors',
   {
     name: 'strapi::security',
@@ -15,7 +15,7 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
+      enabled: true,  // ✅ OK en Strapi 4
       origin: [
         'https://binanceajavon-spec.github.io',
         'https://binanceajavon-spec.github.io/loji-premiere',
@@ -25,7 +25,7 @@ export default [
       ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
-      credentials: true, // Important pour les cookies d'authentification
+      credentials: true,
       keepHeadersOnError: true,
     },
   },
