@@ -1,23 +1,9 @@
-export default [
+module.exports = [
   'strapi::errors',
-  {
-    name: 'strapi::security',
-    config: {
-      contentSecurityPolicy: {
-        useDefaults: true,
-        directives: {
-          'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
-          'media-src': ["'self'", 'data:', 'blob:'],
-          upgradeInsecureRequests: null,
-        },
-      },
-    },
-  },
+  'strapi::security',
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       origin: [
         'https://binanceajavon-spec.github.io',
         'http://localhost:3000',
