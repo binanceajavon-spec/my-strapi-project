@@ -7,7 +7,6 @@ module.exports = [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
           upgradeInsecureRequests: null,
         },
       },
@@ -16,6 +15,7 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
+      enabled: true,  // ✅ OK en Strapi 4
       origin: [
         'https://binanceajavon-spec.github.io',
         'https://binanceajavon-spec.github.io/loji-premiere',

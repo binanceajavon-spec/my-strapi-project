@@ -4,6 +4,6 @@ module.exports = ({ env }) => ({
   url: env('PUBLIC_URL', 'https://my-strapi-project-production-d4d2.up.railway.app'),
   proxy: true,
   app: {
-    keys: env.array('APP_KEYS'),
+    keys: env.array('APP_KEYS', ['key1', 'key2', 'key3']),
   },
 });
