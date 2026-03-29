@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   'strapi::errors',
   {
     name: 'strapi::security',
@@ -7,6 +7,9 @@ module.exports = [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
+          // Autorise spécifiquement Cloudinary pour Strapi 5
+          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
+          'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
           upgradeInsecureRequests: null,
         },
       },
@@ -15,18 +18,17 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,  // ✅ OK en Strapi 4
+      // ✅ Note : L'option 'enabled' a été supprimée ici
       origin: [
         'https://binanceajavon-spec.github.io',
-        'https://binanceajavon-spec.github.io/loji-premiere',
         'https://*.github.io',
         'http://localhost:3000',
         'http://localhost:1337',
+        'https://my-strapi-project-production-d4d2.up.railway.app',
       ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       credentials: true,
-      keepHeadersOnError: true,
     },
   },
   'strapi::poweredBy',
