@@ -1,26 +1,20 @@
 module.exports = ({ env }) => ({
-  auth: {
-    secret: env('ADMIN_JWT_SECRET'),
-    // Pour Strapi 4, on utilise cette syntaxe
-    options: {
-      expiresIn: '30d',
-    },
-    // Sessions admin
-    sessions: {
-      maxSessionLifespan: 2592000000, // 30 jours
-      maxRefreshTokenLifespan: 2592000000,
+  // Activation du plugin Users & Permissions (obligatoire pour l'auth)
+  'users-permissions': {
+    enabled: true,
+    config: {
+      jwtSecret: env('JWT_SECRET'),
     },
   },
-  apiToken: {
-    salt: env('API_TOKEN_SALT'),
-  },
-  transfer: {
-    token: {
-      salt: env('TRANSFER_TOKEN_SALT'),
+  // Cloudinary pour les images
+  upload: {
+    config: {
+      provider: 'cloudinary',
+      providerOptions: {
+        cloud_name: env('CLOUDINARY_NAME'),
+        api_key: env('CLOUDINARY_KEY'),
+        api_secret: env('CLOUDINARY_SECRET'),
+      },
     },
-  },
-  // Désactiver les emails si pas nécessaire
-  email: {
-    enabled: false,
   },
 });
